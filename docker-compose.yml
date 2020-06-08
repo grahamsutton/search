@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  solr:
+    image: solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - data:/opt/solr/server/solr/mycores
+      - ./config/jars/jetty-servlets-9.4.24.v20191120.jar:/opt/solr/server/solr-webapp/webapp/WEB-INF/lib/jetty-servlets-9.4.24.v20191120.jar
+      - ./config/jars/jetty-servlets-9.4.24.v20191120.jar:/opt/solr-8.5.1/server/solr-webapp/webapp/WEB-INF/lib/jetty-servlets-9.4.24.v20191120.jar
+      - ./config/web.xml:/opt/solr/server/solr-webapp/webapp/WEB-INF/web.xml
+      - ./config/web.xml:/opt/solr-8.5.1/server/solr-webapp/webapp/WEB-INF/web.xml
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore
+
+volumes:
+  data:
+    
