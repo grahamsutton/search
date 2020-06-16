@@ -2,48 +2,49 @@
 
 namespace Search;
 
-class Context
+abstract class Context
 {
-    public function __construct()
+    protected $query;
+    protected $identity;
+
+    public function __construct(Query $query, Identity $identity)
     {
-        $this->is_inclusive = false;
-        $this->fields       = [];
-        $this->connection   = [];
+        $this->query    = $query;
+        $this->identity = $identity;
     }
 
-    public function setConnection(array $connection)
+    public function getTypedInput(): string
     {
-        $this->connection = $connection;
-
-        return $this;
+        return $this->query->getTypedInput();
     }
 
-    public function getConnection(): array
+    public function getFilters(): array
     {
-        return $this->connection;
+        return array_merge($this->query->getFilters(), $this->getContextFilters());
     }
 
-    public function setIsInclusive(bool $is_inclusive): self
+    public function getItemsPerPage(): int
     {
-        $this->is_inclusive = $is_inclusive;
-
-        return $this;
+        return $this->query->getItemsPerPage();
     }
 
-    public function isInclusive(): bool
+    public function getPage(): int
     {
-        return $this->is_inclusive;
+        return $this->query->getPage();
     }
 
-    public function setFields(array $fields): self
+    public function getSortDir(): string
     {
-        $this->fields = $fields;
-
-        return $this;
+        return $this->query->getSortDir();
     }
 
-    public function getFields(): array
+    public function getSortFields(): array
     {
-        return $this->fields;
+        return $this->query->getSortFields();
     }
+
+    abstract public function getTextSearchFields(): array;
+    abstract public function getFacets(): array;
+    abstract public function getWeights(): array;
+    abstract public function getContextFilters(): array;
 }

@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Search\Engine;
+use Search\Factory;
+use Search\Query;
+use Search\Context\Manufacturers;
+
+$query = new Query("http://example.com?q=&p=2&per=10");
+
+$client   = Factory::makeClient('solr');
+$identity = Factory::makeIdentity('session');
+
+$engine = new Engine($client);
+
+$results = $engine->search(new Manufacturers($query, $identity));
+
+/* GS */ echo __FILE__.': '.__LINE__.'<pre>';print_r($results);echo'</pre>';exit;

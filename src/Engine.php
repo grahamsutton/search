@@ -2,30 +2,22 @@
 
 namespace Search;
 
-use Search\Results;
+use Search\Context;
+use Search\Contracts\Client;
+use Search\Contracts\Results;
+use Search\Contracts\Searchable;
+use Search\Engine;
+use Search\Query;
 
-abstract class Engine
+class Engine implements Searchable
 {
-    public function itemsPerPage(int $items_per_page): self
+    public function __construct(Client $client)
     {
-        $this->items_per_page = $items_per_page;
-
-        return $this;
+        $this->client = $client;
     }
 
-    public function page(int $page): self
+    public function search(Context $context): Results
     {
-        $this->page = $page;
-
-        return $this;
+        return $this->client->search($context);
     }
-
-    public function query(string $query): self
-    {
-        $this->query = $query;
-
-        return $this;
-    }
-
-    abstract public function search(): Results;
 }
